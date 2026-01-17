@@ -1,16 +1,13 @@
 from flask import Flask, request, jsonify
-from sklearn.datasets import load_iris
-from sklearn.ensemble import RandomForestClassifier
 import numpy as np
+import joblib
 
 # Tworzymy aplikację Flask
 app = Flask(__name__)
 
 # Trenujemy model przy starcie aplikacji
-print("Trenuję model...")
-iris = load_iris()
-model = RandomForestClassifier(n_estimators=10, random_state=42)
-model.fit(iris.data, iris.target)
+print("Wczytuję model...")
+model = joblib.load('model.pkl')
 print("Model gotowy!")
 
 # Nazwy gatunków
@@ -116,12 +113,12 @@ def form():
 @app.route('/info', methods=['GET'])
 def info():
     """Informacje o modelu"""
-    train_accuracy = model.score(iris.data, iris.target)
+    # train_accuracy = model.score(iris.data, iris.target)
 
     return jsonify({
         "model_type": type(model).__name__,
         "parameters": model.get_params(),
-        "train_accuracy": round(train_accuracy, 4),
+        # "train_accuracy": round(train_accuracy, 4),
         "n_features": model.n_features_in_,
         "n_classes": len(SPECIES),
         "classes": SPECIES

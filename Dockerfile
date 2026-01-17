@@ -8,6 +8,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Uruchomienie trenowania modelu
+COPY train.py .
+RUN python train.py
+
 # Kopiuj kod aplikacji
 COPY app.py .
 
