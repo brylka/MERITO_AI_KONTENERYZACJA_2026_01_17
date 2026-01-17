@@ -113,6 +113,20 @@ def form():
     </body>
     </html>
     '''
+@app.route('/info', methods=['GET'])
+def info():
+    """Informacje o modelu"""
+    train_accuracy = model.score(iris.data, iris.target)
+
+    return jsonify({
+        "model_type": type(model).__name__,
+        "parameters": model.get_params(),
+        "train_accuracy": round(train_accuracy, 4),
+        "n_features": model.n_features_in_,
+        "n_classes": len(SPECIES),
+        "classes": SPECIES
+    })
+
 
 
 
