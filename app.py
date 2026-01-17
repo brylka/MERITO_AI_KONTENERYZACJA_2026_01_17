@@ -124,7 +124,24 @@ def info():
         "classes": SPECIES
     })
 
+@app.route('/predict_batch', methods=['POST'])
+def predict_batch():
+    data = request.get_json()
 
+    features = np.array([
+        [obs['sepal_length'], obs['sepal_width'], obs['petal_length'], obs['petal_width']]
+        for obs in data['data']
+    ])
+
+    predictions = model.predict(features)
+    probabilitys = model.predict_proba(features).max(axis=1)
+
+    results = [
+        {"species": SPECIES[pred], "probability": round(float(prob), 3)}
+        for pred, prob in zip(predictions, probabilitys)
+    ]
+
+    return jsonify({"predictions": results})
 
 
 if __name__ == '__main__':
